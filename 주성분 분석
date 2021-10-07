@@ -1,0 +1,372 @@
+######################################주성분분석
+wine=read.csv("C:/s/a/wine.csv")
+dim(wine)
+cor(wine[,1:13]) #높은 상관계수가 있는지 확인
+log.wine=log(wine[,1:13]) #데이터가 한쪽으로 편향될 가능성이 있음으로 log를 취해줌
+wine.S=wine[,14] #Class는 따로 객체저장
+pca=prcomp(wine[,1:13],center = T, scale=T) #표준화 시키며, 주성분분석
+plot(pca,type="l") #elbow point 확인
+summary(pca)
+PRC=as.matrix(log.wine) %*% pca$rotation
+head(PRC)
+train1=cbind(wine.S,as.data.frame(PRC))
+train1[,1]=as.factor(train1[,1])
+colnames(train1)[1]="label"
+fit1=lm(label~PC1+PC2+PC3,data = train1)
+fit1_pred=predict(fit1,newdata = train1)
+b=round(fit1_pred)
+b[b==0|b==1]="barbera"    #barbera분류
+b[b==2]="barolo"          #barolo 분류 
+b[b==3|b==4]="grignolino" #grignolino분류
+biplot(pca)
+table(b,wine.S)
+
+
+###################변수선택
+raw_Data=read.csv("C:/s/PRSA_data_2010.1.1-2014.12.31.csv")
+dim(raw_Data) # 43824 x 13
+prep_Data = raw_Data[-is.na(raw_Data),] # Missing value 제거
+dim(prep_Data) # 43823 x 13
+anal_Data = prep_Data[, -c(1, 2, 3, 4, 5, 7)] #변수삭제
+full_Model = lm(pm2.5~., data=anal_Data)
+# Warning: 범주형 변수가 더미처리 되므로 개수가 증가하는 것처럼 보임
+summary(full_Model)
+AIC(full_Model) # 전체 변수를 모두 사용한 모델: AIC=488,950.9
+fw_Model = step(full_Model, direction="forward")  # 전진 선택: AIC=370,447.7
+bw_Model = step(full_Model, direction="backward") # 후진 선택: AIC=370,446.1
+st_Model = step(full_Model, direction="both") # 단계별 선택: AIC=370,446.1
+#일반적으로 AIC값이 낮을수록 좋은 모델이라고 평가한다.
+
+######################eigenvlaue
+x1 = c(0.20, 0.45, 0.33, 0.54, 0.77)
+x2 = c(5.60, 5.89, 6.37, 7.90, 7.87)
+x3 = c(3.56, 2.40, 1.95, 1.32, 0.98)
+X = cbind(x1, x2, x3)
+sc_X = scale(X, center=T, scale=T)
+#scale(…, center=T, scale=T)
+# center=T; 평균을 0으로 표준화함
+# scale=T; 분산을 1로 표준화함
+R = cov(sc_X) # Correlation Matrix
+ev = eigen(R) # Spectral Decomposition
+eig_val = ev$values # Eigenvalues
+eig_vec = ev$vectors # Eigenvectors
+PC1 =eig_vec[1,1]*sc_X[,1] + eig_vec[2,1]*sc_X[,2] + eig_vec[3,1]*sc_X[,3]
+PC1 = eig_vec[1,1]*sc_X[,1] + eig_vec[2,1]*sc_X[,2] + eig_vec[3,1]*sc_X[,3] # 첫 번째 주성분 점수
+PC2 = eig_vec[1,2]*sc_X[,1] + eig_vec[2,2]*sc_X[,2] + eig_vec[3,2]*sc_X[,3] # 두 번째 주성분 점수
+PC3 = eig_vec[1,3]*sc_X[,1] + eig_vec[2,3]*sc_X[,2] + eig_vec[3,3]*sc_X[,3] # 세 번째 주성분 점수
+PCs = cbind(PC1, PC2, PC3); print(PCs)
+PC1 %*% PC2 < 0.00001 #TRUE 이걸 왜함?
+#0.00001를 곱하는 이유는 PCA에서 0이되어야 서로 직교하기 때문에 확인
+sum(var(PC1)+var(PC2)+var(PC3)) # 주성분 점수의 분산의 합
+sum(eig_val) # Eigenvalue의 합
+sum(var(sc_X[,1])+var(sc_X[,2])+var(sc_X[,3])) #== sum(diag(var(sc_X))) # 데이터 분산의 합
+v_p1 = var(PC1) / sum(var(PC1)+var(PC2)+var(PC3)) # 첫 번째 주성분의 설명력
+v_p2 = var(PC2) / sum(var(PC1)+var(PC2)+var(PC3)) # 두 번째 주성분의 설명력
+v_p3 = var(PC3) / sum(var(PC1)+var(PC2)+var(PC3)) # 세 번째 주성분의 설명력
+
+####################prcomp
+pc = prcomp(X, center=T, scale=T) # 주성분 분석 실행
+summary(pc) # 꼭 해보기, 분산값을 확인하여 주성분선택
+plot(pc,type="l") #elbow point 확인 엘보우 포인트 이전 주성분 선택
+pc$sdev**2 # Eigenvalues
+pc$rotation # Eigenvectors
+PCs = pc$x # score
+PC1 = PCs[,1]
+PC2 = PCs[,2]
+PC3 = PCs[,3]
+
+####################
+korn = c(26, 46, 57, 36, 57, 26, 58, 37, 36, 56, 78, 95, 88, 90, 52, 56)
+engs = c(35, 74, 73, 73, 62, 22, 67, 34, 22, 42, 65, 88, 90, 85, 46, 66)
+math = c(35, 76, 38, 69, 25, 25, 87, 79, 36, 26, 22, 26, 58, 36, 25, 44)
+scin = c(45, 89, 54, 55, 33, 45, 67, 89, 47, 36, 40, 56, 68, 45, 37, 56)
+X = cbind(korn, engs, math, scin)
+pc = prcomp(X)
+pc$rotation # loading / Eigenvectors
+PCs = pc$x
+PC1 = PCs[,1]
+PC2 = PCs[,2]
+PC3 = PCs[,3]
+PC4 = PCs[,4]
+v_p1 = var(PC1) / sum(var(PC1)+var(PC2)+var(PC3)+var(PC4))
+v_p2 = var(PC2) / sum(var(PC1)+var(PC2)+var(PC3)+var(PC4))
+v_p3 = var(PC3) / sum(var(PC1)+var(PC2)+var(PC3)+var(PC4))
+v_p4 = var(PC4) / sum(var(PC1)+var(PC2)+var(PC3)+var(PC4))
+v_cs = cumsum(c(v_p1, v_p2, v_p3, v_p4)) #누적합 확인
+plot(v_cs, type="o", ylab="Cumul_Var", xlab="# of Comp")
+
+#######################wine데이터
+summary(pc$rotation)
+
+wine_data=read.csv("C:/s/a/wine.csv")
+dim(wine_data) # 178 x 14
+wine = wine_data[ ,-14] # 178 x 13
+pc = prcomp(wine, center=T, scale=T)
+vexplained = as.data.frame(pc$sdev^2/sum(pc$sdev^2))
+vexplained = cbind(c(1:ncol(wine)), vexplained, cumsum(vexplained[,1]))
+colnames(vexplained) = c("No_of_Principal_Components",
+"Individual_Variance_Explained",
+"Cumulative_Variance_Explained")
+plot(vexplained$No_of_Principal_Components,
+     vexplained$Cumulative_Variance_Explained,
+     xlim = c(1, ncol(wine)), type='b', pch=16,
+     xlab = "Principal Components", ylab = "Cumulative Variance Explained",
+     main = 'Principal Components vs Cumulative Variance Explained')
+v_x = which(vexplained$Cumulative_Variance_Explained>=0.7)[1] 
+abline(h=0.7, v=v_x, lty=2, lwd=2, col="red"); cat("# of Comp=", v_x)
+
+############################
+Scores = pc$x # 주성분 점수
+Score1 = Scores[,1] # 첫 번째 주성분 점수
+Score2 = Scores[,2] # 두 번째 주성분 점수
+plot(Scores[,1:2], col=wine_data$Class, pch=as.integer(wine_data$Class))
+
+#####################
+OPT = c()
+for (i in 1:nrow(wine)){
+  if (wine_data$Class[i]=="barolo"){
+    P = 1
+  } else if (wine_data$Class[i]=="grignolino"){
+    P = 2
+  } else{P = 4}
+  OPT = c(OPT, P) }
+plot(Scores[,1:2], col=OPT, pch=OPT) #분류모델
+legend(legend=c("barolo", "gridnolino", "barbera"), x=-4.3, y=-1.5, col=c(1, 2, 4), pch=c(1, 2, 4))
+#범례생성
+
+#############################  MNIST Dataset
+install.packages("keras")
+install.packages("tidyverse")
+library(keras)
+library(tidyverse)
+train_x = read.csv("C:/s/keras_mnist_train_x.csv")
+train_y = read.csv("C:/s/keras_mnist_train_y.csv")
+train_y = as.matrix(train_y)
+train_x = train_x / 255 # 0-1사이로 변환
+
+mnist_17 = train_x[c(which(train_y==1), which(train_y==7)),]
+y_17 = train_y[c(which(train_y==1), which(train_y==7))]
+pc = prcomp(mnist_17)
+vexplained = as.data.frame(pc$sdev^2/sum(pc$sdev^2))
+vexplained = cbind(c(1:784), vexplained, cumsum(vexplained[,1]))
+colnames(vexplained) = c("No_of_Principal_Components",
+                           "Individual_Variance_Explained",
+                           "Cumulative_Variance_Explained")
+plot(vexplained$No_of_Principal_Components,
+       vexplained$Cumulative_Variance_Explained,
+       xlim=c(0,150), type="b", pch=16,
+xlab="Principal Components",
+ylab="Cumulative Variance Explained",
+main='Principal Components vs Cumulative Variance Explained')
+v_x = which(vexplained$Cumulative_Variance_Explained>=0.7)[1] #위치찾기 ex몇번째?
+abline(h=0.7, v=v_x, lty=2, lwd=2, col="red"); cat("# of Comp=", v_x) # 12개
+
+####################################
+Scores = pc$x # 주성분 점수
+Score1 = Scores[,1] # 첫 번째 주성분 점수
+Score2 = Scores[,2] # 두 번째 주성분 점수
+Class = c()
+for (i in 1:nrow(mnist_17)){
+  if (y_17[i]==1){
+    Col = 1
+  } else{Col = 2}
+  Class = c(Class, Col)
+}
+plot(Scores[,1], Scores[,2], col=Class, pch=as.character(y_17), xlab="PC1", ylab="PC2")
+#1과 7을 구분하는 모델을 만들기 위해서
+
+########################swiss roll
+
+require("rgl")
+SR = read.csv("C:/s/SwissRoll.csv")
+Class = c()
+Shape = c()
+k = 1
+for (i in 1:4){
+k = k + 1
+for ( j in 1:400){
+Class = c(Class, k)
+Shape = c(Shape, k*2)
+}
+}
+open3d() 
+plot3d(SR, col=Class, size=3)
+
+pc = prcomp(SR, center=T, scale=T) # 주성분 분석
+Scores = pc$x # 주성분 점수
+Score1 = Scores[,1] # 첫 번째 주성분 점수
+Score2 = Scores[,2] # 두 번째 주성분 점수
+plot(Score1, Score2, col=Class, pch=Shape, xlab="PC1", ylab="PC2")
+
+###################### 선형회구모델 구축
+
+Son = c(163, 166, 175, 178, 174) # Y
+Father = c(152, 168, 170, 180, 183) # X
+M = lm(Son~Father) # lm( ) = linear model 함수
+plot(Son~Father,
+       xlim=c(150, 185),
+       ylim=c(160, 180),
+       xlab="X", ylab="Y")
+abline(M, col="red")
+summary(M) #lm아니면 Estimate값 확인
+
+#########점추정을 통한 검정
+Son = c(163, 166, 175, 178, 174) # Y
+Father = c(152, 168, 170, 180, 183) # X
+M = lm(Son~Father) # lm( ) = linear model 함수
+plot(Son~Father,
+       xlim=c(150, 185),
+       ylim=c(160, 180),
+       xlab="X", ylab="Y")
+abline(M, col="red")
+summary(M) #pr값 확인
+M$coefficients[2] # 𝛽𝛽
+B1 = M$coefficients[2] # 𝛽𝛽
+LB = B1-qt(p=0.975, df=3) * 0.1624 #신뢰구간
+UB = B1+qt(p=0.975, df=3) * 0.1624 #
+confint(M, level=0.95) # confidence interval 신뢰구간 계산함
+
+#########모델 적정성 평가 설명력
+summary(M) #R스쿼어 값 확인
+set.seed(1234)
+new_X1 = runif(5, 150, 180) #난수 형성하기
+M2 = lm(Son~Father+new_X1)
+summary(M2)
+Son = c(163, 166, 175, 178, 174,
+          160, 170, 180, 155, 175)
+Father = c(152, 168, 170, 180, 183,
+             155, 175, 175, 167, 181)
+Data = data.frame(Father, Son)
+train_Data = Data[1:7, ]
+test_Data = Data[8:10, ]
+plot(Son~Father, data=train_Data, pch=1, cex=2,
+       xlim=c(150, 185), ylim=c(150, 185),
+       xlab="Father", ylab="Son")
+M = lm(Son~Father, data=train_Data)
+abline(M)
+summary(M)
+test_X = data.frame(Father = test_Data$Father)
+y_hat = predict(M, test_X)
+
+###############다중회귀 모델
+M = lm(y~., data=D)
+confint(M, level=0.95) # when, alpha=0.05
+
+#######################mtcars
+Data = mtcars # 기본 내장 데이터로 자동차 연비에 대한 자료
+dim(Data)
+str(Data) #변수확인 (int형,num형,vec으로 변경)
+Data$vs = as.factor(Data$vs)
+Data$am = as.factor(Data$am)
+str(Data)
+upper.panel<-function(x, y, t_x=0.5, t_y=0.5, t_s=1, t_c="red", ...){
+  points(x,y, pch=19)
+  r = round(cor(x, y), digits=2)
+  txt = paste0("R = ", r)
+  usr = par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  text(t_x, t_y, txt, cex=t_s, col=t_c)
+}
+pairs(Data, upper.panel=upper.panel, t_x=0.5, t_y=0.7, t_s=1.0, t_c="red", lower.panel=NULL)
+M = lm(mpg~., data=Data)
+summary(M)
+M_log = lm(log(mpg)~., data=Data) #로그를 취하는 이유는 다중공산성을 줄이기 위함
+summary(M_log) #결국 결정계수값 증가=설명을 잘 해준다.
+step(M_log, direction="both")
+M_step = lm(log(mpg)~hp+wt+qsec+gear,
+              data=Data)
+summary(M_step)
+################
+library(rgl)
+library(car)
+viz_Data = Data[ , c('hp', 'wt', 'mpg')]
+HP = viz_Data$hp
+WT = viz_Data$wt
+log_MPG = log(viz_Data$mpg)
+scatter3d(x=HP, y=WT, z=log_MPG)
+################
+library(ISLR)
+dim(Carseats) # 400개 지역 아동용 카 시트 판매량 자료
+str(Carseats)
+str(Carseats)
+contrasts(Carseats$Urban)
+contrasts(Carseats$US)
+M = lm(Sales~., data=Carseats)
+summary(M)
+
+##################학습시작
+train_idx = sample(x=1:nrow(Carseats),
+                   size=0.7*(nrow(Carseats)),
+                   replace=FALSE)
+train_Data = Carseats[train_idx, ]
+test_Data = Carseats[-train_idx, ]
+train_M = lm(Sales~., data=train_Data)
+summary(train_M)
+step(train_M, direction="both")
+train_M_step = lm(Sales~CompPrice+Income+
+                      Advertising+Price+
+                      ShelveLoc+Age,
+                    data=train_Data)
+summary(train_M_step)
+test_X = test_Data[ , 2:ncol(test_Data)]
+test_y = test_Data$Sales
+full_pred = predict(train_M, test_X)
+full_MAD = mean(abs(test_y - full_pred))
+full_RMSE = sqrt(mean((test_y - full_pred)^2))
+full_MAPE = (sum(abs((test_y - full_pred)/test_y))/length(test_y))*100
+step_pred = predict(train_M_step, test_X)
+step_MAD = mean(abs(test_y - step_pred))
+step_RMSE = sqrt(mean((test_y - step_pred)^2))
+step_MAPE = (sum(abs((test_y - step_pred)/test_y))/length(test_y))*100
+
+nomi_X = data.frame(CompPrice=c(100, 125, 149), Income=c(41, 69, 95),
+                    Advertising=c(2, 5, 8), Population=c(120, 264, 400),
+                    Price=c(85, 117, 120), ShelveLoc=c("Medium", "Good", "Medium"),
+                    Age=c(35, 53, 55), Education=c(16, 14, 10),
+                    Urban=c("Yes", "Yes", "No"), US=c("No", "Yes", "Yes"))
+nomi_pred = predict(train_M_step, nomi_X)
+names(nomi_pred) = c("A", "B", "C")
+barplot(nomi_pred, ylab="Expected Sales")
+
+################PCR
+x1 = c(0.20, 0.45, 0.33, 0.54, 0.77)
+x2 = c(5.60, 5.89, 6.37, 7.90, 7.87)
+x3 = c(3.56, 2.40, 1.95, 1.32, 0.98)
+y = c(9.35, 8.70, 8.64, 9.79, 9.59)
+X = matrix(c(x1, x2, x3), nrow=5, byrow=F)
+R = cor(X)
+# Linear Regression
+M = lm(y~x1+x2+x3)
+summary(M)
+
+# Principal Component Analysis
+pc = prcomp(X, center=T, scale=T)
+Z = pc$x
+PCR = lm(y~Z)
+summary(PCR)
+# y_hat
+y_hat_LM = predict(M, data.frame(X))
+y_hat_PRC = predict(PCR, data.frame(Z))
+
+##################약
+Docu = read.csv("C:/s/raw.csv", header = TRUE, sep = ",") # Raw data
+DTM = read.csv("C:/s/DTM2000.csv") # pre-processed data
+DTM = data.frame(DTM, Rating=Docu$rating)
+dim(DTM)
+full_m = lm(Rating~., data=DTM)
+B = coef(full_m)[-1] # full_m$coefficients: p + 1(b1, b2, ..., bp + b0)
+length(B) 
+B[1:10]
+sort_B = sort(B, decreasing=T)
+head(sort_B, 10)
+library(NLP)
+library(tm)
+library(SnowballC)
+Docu = read.csv("c:/s/raw.csv", header = TRUE, sep = ",")
+Review = as.matrix(Docu$benefitsReview)
+corpus = Corpus(VectorSource(Review))
+tdm = TermDocumentMatrix(corpus, control=list(stopwords=TRUE,
+minWordLength=3,
+removeNumbers=TRUE,
+removePunctuation=TRUE))
+dtm = t(as.matrix(tdm))
