@@ -1,5 +1,5 @@
-# R
-############################ 필요한 패키지 설치
+#KoNLP
+########################### 필요한 추가 설치
 install.packages("rJava")
 library(rJava)
 install.packages("wordcloud")
@@ -53,3 +53,4 @@ a=data.frame("jan","Feb","mar","Apr","May","Jun","Jul","Aug","sep","Oct","Nov","
 day.1=data.frame(tx1,a)
 ggplot(data = day.1,aes(day.1$,day.1$tx1))
 barplot(text1$day)
+[KoNLP in r.txt](https://github.com/dongjun-kor/R/files/7298811/KoNLP.in.r.txt)
