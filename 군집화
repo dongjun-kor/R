@@ -1,0 +1,272 @@
+# https://statkclee.github.io/ml/ml-sna-r-ecosystem.html
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(igraph)
+install.packages("igraph")
+library(progress)
+ex_Data = data.frame(id=c("P1", "P2", "P3"),
+                     P64=c("A123/45 || B123/45 || C123/45",
+                           "B123/45 || D123/45",
+                           "C123/45 || D123/45 || E123/45"))
+
+split_into_multiple = function(column, pattern = '[::||::]', into_prefix){
+  cols = str_split_fixed(column, pattern, n = Inf)
+  cols[which(cols == "")] = NA
+  cols = as_tibble(cols)
+  m = dim(cols)[2]
+  
+  names(cols) = paste(into_prefix, 1:m, sep = "_")
+  return(cols)
+}
+
+ipc_matrix = ex_Data %>%
+  bind_cols(split_into_multiple(.$P64, '[::||::]', 'IPC')) %>%
+  select(id, starts_with('IPC_'))  
+
+ipc_matrix
+
+ipc_matrix = ipc_matrix[ , -1]
+
+ipc_matrix
+
+for (i in 1:nrow(ipc_matrix)){
+  for (j in 1:ncol(ipc_matrix)){
+    if (!is.na(ipc_matrix[i,j])){
+      ipc_matrix[i,j] = substr(str_trim(ipc_matrix[i,j],
+                                        side='left'),1,4)
+    }
+  }
+}
+
+ipc_matrix
+
+df = data.frame(matrix(nrow=0, ncol=2))
+for (i in 1:nrow(ipc_matrix)){
+  for (j in 2:ncol(ipc_matrix)){
+    if (!is.na(ipc_matrix[i,j])){
+      df = rbind(df, data.frame(ipc_matrix[i,1], ipc_matrix[i,j]))
+    }
+  }
+}
+colnames(df) = c('from', 'to')
+df
+
+gdf = graph.data.frame(df, directed = FALSE)
+
+par(mar=c(4, 4, 1, 1)) # innter margin: 아래=5, 왼=4, 위=4, 오=2
+par(oma=c(1, 0, 0, 0)) # outer margin: 아래=0, 왼=0, 위=0, 오=0
+set.seed(1234)
+plot(gdf)
+plot(gdf, vertex.size=30, vertex.color='white', vertex.label.color='black')
+plot(gdf,
+     # vertex
+     vertex.color='gray',
+     vertex.size=20,
+     vertex.label.color='black',
+     # shape = circle, square, rectangle, crectangle, vrectangle, pie
+     vertex.shape='circle',
+     edge.color='blue'
+)
+
+# AI 데이터
+path = "C:/a/da12.csv"
+path1 = "C:/a/da1212.txt"
+path2 = "C:/a/da1213.txt"
+raw_Data2 = read.csv(path2, stringsAsFactors=F)
+raw_Data1 = read.csv(path1, stringsAsFactors=F)
+id=raw_Data1$No
+P64=raw_Data2$P64
+raw_Data=data.frame(P64,id)
+raw_Data
+dim(raw_Data)
+raw_Data
+raw_Data
+raw_Data$癤풦D=id
+net_Data = raw_Data[ , c("id", "P64")]
+dim(net_Data)
+
+ipc_matrix = net_Data %>%
+  bind_cols(split_into_multiple(.$P64, '[::||::]', 'IPC')) %>%
+  select(id, starts_with('IPC_'))  
+
+ipc_matrix = ipc_matrix[ , -1]
+
+prog_bar = progress_bar$new(total = nrow(ipc_matrix))
+for (i in 1:nrow(ipc_matrix)){
+  prog_bar$tick()
+  for (j in 1:ncol(ipc_matrix)){
+    if (!is.na(ipc_matrix[i,j])){
+      ipc_matrix[i,j] = substr(str_trim(ipc_matrix[i,j],
+                                        side='left'),1,4)
+    }
+  }
+}
+
+df = data.frame(matrix(nrow=0, ncol=2))
+prog_bar = progress_bar$new(total = nrow(ipc_matrix))
+for (i in 1:nrow(ipc_matrix)){
+  prog_bar$tick()
+  for (j in 2:ncol(ipc_matrix)){
+    if (!is.na(ipc_matrix[i,j])){
+      df = rbind(df, data.frame(ipc_matrix[i,1], ipc_matrix[i,j]))
+    }
+  }
+}
+colnames(df) = c('from', 'to')
+
+dup_idx = c()
+for (d in 1:nrow(df)){
+  if (df[d, 1] == df[d, 2]){
+    dup_idx = c(dup_idx, d)
+  }
+}
+dup_df = df[-dup_idx, ]
+dup_gdf = graph.data.frame(dup_df, directed = FALSE)
+
+par(mar=c(4, 4, 1, 1)) # innter margin: 아래=5, 왼=4, 위=4, 오=2
+par(oma=c(1, 0, 0, 0)) # outer margin: 아래=0, 왼=0, 위=0, 오=0
+set.seed(1234)
+
+plot(dup_gdf,
+     # vertex
+     vertex.color='gray',
+     vertex.size=10,
+     vertex.label.color='red',
+     vertex.label.size=10,
+     # shape = circle, square, rectangle, crectangle, vrectangle, pie
+     vertex.shape='circle',
+     edge.color='black')
+
+graph.density(dup_gdf) # 네트워크의 밀도
+top_Degree = head(sort(degree(dup_gdf), decreasing=T), 5)
+top_Between = head(sort(betweenness(dup_gdf), decreasing=T), 5)# 매개 중심성; betweenness centrality
+
+top_IPC = c(names(top_Degree), names(top_Between))
+
+top_idx = c()
+prog_bar = progress_bar$new(total = nrow(dup_df))
+for (i in 1:nrow(dup_df)){
+  prog_bar$tick()
+  from_i = dup_df[i, 1]
+  to_i = dup_df[i, 2]
+  
+  from_idx = which(from_i == top_IPC)
+  to_idx = which(to_i == top_IPC)
+  
+  if (length(from_idx) != 0){
+    top_idx = c(top_idx, from_idx)
+  }
+  if (length(to_idx) != 0){
+    top_idx = c(top_idx, to_idx)
+  }
+}
+top_idx = unique(top_idx)
+
+top_df = df[top_idx, ]
+top_gdf = graph.data.frame(top_df, directed = FALSE)
+plot(top_gdf,
+     # vertex
+     vertex.color='white',
+     vertex.size=25,
+     vertex.label.color='red',
+     vertex.label.size=25,
+     # shape = circle, square, rectangle, crectangle, vrectangle, pie
+     vertex.shape='circle',
+     edge.color='black')
+
+### + Clustering
+#패키지 설치 sna설치, 미러->설치->library(sna)
+library(sna) # for Network
+install.packages("sna")
+install.packages("tm")
+library(tm) # for Text Mining
+
+path = "E:/CJU/2021_새일센터/발진회/Data/Data.csv"
+raw_Data = read.csv(path, stringsAsFactors=F)
+DeepLearning_Data = raw_Data[raw_Data$GROUP3=='딥러닝', ]
+dim(DeepLearning_Data)
+
+Text = paste(DeepLearning_Data$P2, DeepLearning_Data$Abstract)# 제목과 요약을 병합
+class(Text)
+my_Stopwords = c("<p>", "NotAvailable", "</p>")
+Text = stringr::str_replace_all(Text, my_Stopwords, "")
+Text = as.matrix(Text)
+
+
+Text = Corpus(VectorSource(Text))
+Text = tm_map(Text, stripWhitespace)
+Text = tm_map(Text, tolower)
+Text = tm_map(Text, removeNumbers)
+Text = tm_map(Text, removePunctuation)
+Text = tm_map(Text, removeWords, stopwords("english"))
+
+DTM = DocumentTermMatrix(Text)
+DTM = as.matrix(DTM)
+dim(DTM)
+
+words_Freq = colSums(DTM)
+top_words = head(sort(words_Freq, decreasing=T), 10)
+barplot(top_words, ylim=c(0, max(words_Freq)))
+
+top_words = head(sort(words_Freq, decreasing=T), 100)
+top_DTM = DTM[ , c(names(top_words))]
+dim(top_DTM)
+
+# [실루엣 계산]
+library(cluster)
+Sil = c()
+for (k in 2:200){
+  Clustering = pam(top_DTM, k)
+  Sil_value = silhouette(Clustering)
+  Sil_mean = mean(Sil_value)
+  Sil = c(Sil, Sil_mean)
+}
+plot(Sil, type="b")
+Clustering = pam(top_DTM, 10)
+Sil_value = silhouette(Clustering)
+plot(Sil_value) # silhouette plot  
+
+PC = prcomp(DTM, retx=T)# SVD-PCA 수행
+PC = predict(PC)
+PC3 = PC[ , 1:3]#전체 중에서 주성분 3개만 쓴 것
+head(PC3)
+
+# [퍼지군집화]
+
+FC = fanny(PC3, 3, maxit=10000) #퍼지군집은 cluster함수에 있음
+FC_member = FC$membership
+dim(FC_member)
+head(FC_member)
+
+mean(FC_member)
+for (i in 1:nrow(FC_member)){
+  for (j in 1:ncol(FC_member)){
+    if (FC_member[i, j] < 0.33){
+      FC_member[i, j] = 0
+    } else{FC_member[i, j] = 1}
+  }
+}
+rownames(FC_member) = DeepLearning_Data$id
+colnames(FC_member) = c("Cluster1", "Cluster2", "Cluster3")#, "Cluster4", "Cluster5")
+IBM_idx = which(DeepLearning_Data$P3=="MICROSOFT TECHNOLOGY LICENSING")
+IBM = FC_member[IBM_idx, ]
+N = nrow(IBM)
+M = ncol(IBM)
+B = rbind(cbind(matrix(0, N, N),
+                IBM),
+          cbind(t(IBM),
+                matrix(0, M, M)))
+vertex_Col = c(rep("red", N), rep("blue", M))
+vertex_Cex = c(rep(1, N), rep(2, M))
+
+library(sna)
+gplot(B,
+      mode='circle',
+      vertex.col=vertex_Col,
+      vertex.cex=vertex_Cex,
+      label.col=vertex_Col,
+      label.cex=0.8,
+      usearrows=F,
+      displaylabels=T)
+colSums(B)[(ncol(B)-3):ncol(B)]
