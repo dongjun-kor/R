@@ -1,0 +1,37 @@
+#R버전은 3.0.3이어야함
+getwd() #작업위치 확인
+installr::install.java()
+install.packages("Sejong")
+install.packages("hash")
+install.packages("rJava")
+install.packages("tau")
+install.packages("RSQLite")
+install.packages("devtools")
+install.packages("devtools")
+library(KoNLP)
+install.packages("devtools", dependencies=TRUE, INSTALL_opts = c('--no-lock'))
+
+install.packages("wordcloud2")
+library(wordcloud2)
+#################### 텍스트마이닝
+SejongDic()
+NIADic()
+text1=read.table("C:/a/AR2.txt")
+text1=read.csv("C:/a/A.csv") #데이터 불러오기
+is(text2) #성분확인
+tx1=text1
+
+ta=cbind(tx1)
+ta=paste(tx1)
+str(ta) #구조확인
+dim(tx1) #차원확인
+tx2=extractNoun(ta)
+tx3=unlist(tx2)
+tx4=as.character(tx1)
+useNIADic()
+dtm=DocumentTermMatrix(tx1) #명사추출
+text2=sort(table(tx3),decreasing = T,300) #300개 row 내림차순정렬 후 상위 300개 선정
+wordcloud2(text2) #시각화
+tx4=mergeMethods("장","장치")
+mergeMethods("장","장치")
+table(text2)
