@@ -1,0 +1,35 @@
+#a(일자)b(주가)c(전일대비상승하락)d(주가상승폭)e(거래량)f(변동수량)g(보유비중)
+#h(보유주식수)i(취득가능주식수)j(외국인한도)k(한도소진율)l(조회수)m(공감)n(비공감)
+
+install.packages("psych")
+library(psych)
+install.packages("car")
+library(car)
+####회귀분석을 통해 변수 유효성 검증
+meji=read.csv("C:/a/meji.csv")
+str(meji)
+attach(meji)
+meji.lm=lm(b~c+d+e+f+g+h+i+j+k+l+m+n,data=meji)
+meji.lm.test=lm(b~c+d+e+g+h+i+l+m+n,data=meji)
+summary(meji.lm.test)
+plot(meji.lm)
+####다중공산성 확인
+vif(meji.lm.test) #g h l m n 다중공산성 확인
+####변수선택
+step(meji.lm,direction = "backward") #변수선정
+step(meji.lm,scope = formula() ,direction = "forward")
+step(meji.lm,direction = "both")
+####주성분분석 prcomp
+summary(prcomp(meji[,2:14],center = T,scale. = T))
+summary(princomp(meji[,2:14]),cor=T,scores=T)
+meji.pr=prcomp(meji[,2:14],center = T,scale. = T) #표준화를 하지 않았을때, 엘보포인트가 잘 나타남
+plot(meji.pr,type="l")
+plot(meji.pr)
+biplot(meji.pr)
+summary(meji.pr)
+####주성분분석 princomp
+meji.pri=princomp(meji[,2:14],cor=F, scores=T) #공분산행렬을 통한 엘보포인트가 잘 나타남
+plot(meji.pri,type="l")
+biplot(meji.pri)
+#######prcomp에서 공분산행렬 비표준화 데이터로 활용
+
