@@ -1,0 +1,142 @@
+text1=read.csv("C:/s/m.csv")
+name=file.path("C:/a")
+library(wordcloud)
+read.table("C:/a/asd.txt",header = T)
+length(dir(name))
+dir(name)
+length(dir(name))
+docs=Corpus(DirSource(name))
+library(tm)
+dtm=DocumentTermMatrix(docs)
+freq = colSums(as.matrix(dtm))
+ord = order(-freq)
+freq[head(ord,10)]
+findFreqTerms(dtm, 100)
+wordcloud(names(freq), freq, min.freq = 70, scale = c(3, .5), colors=brewer.pal(6, 
+                                                                                "Dark2"))
+
+
+install.packages('KoNLP')
+source("https://install-github.me/talgalili/installr")
+installr::install.java()
+library(KoNLP)
+
+install.packages("wordcloud2")
+library(wordcloud2)
+#################### 텍스트마이닝
+install.packages("stringr")
+library(stringr)
+
+useSejongDic()
+NIADic()
+memory.limit()
+library(tm)
+
+install.packages("koRpus")
+library(koRpus)
+
+
+
+text1=read.table("C:/a/EW.txt",header = F,sep="")
+text1=read.csv("C:/a/lec.csv") #데이터 불러오기
+is(text2) #성분확인
+############A
+tx1=text1$a
+ta.1=cbind(tx1)
+ta.1=paste(tx1)
+############B
+tx2=text1$b
+ta.2=cbind(tx2)
+ta.2=paste(tx2)
+############C
+tx3=text1$c
+ta.3=cbind(tx3)
+ta.3=paste(tx3)
+############단어추출
+############ta.1
+ta.ex.1=extractNoun(ta.1)
+ta.ex.un.1=unlist(ta.ex.1)
+text.c1=sort(table(ta.ex.un.1),decreasing = T)
+############ta.2
+ta.ex.2=extractNoun(ta.2)
+ta.ex.un.2=unlist(ta.ex.2)
+text.c2=sort(table(ta.ex.un.2),decreasing = T)
+############ta.3
+ta.ex.3=extractNoun(ta.3)
+ta.ex.un.3=unlist(ta.ex.3)
+text.c3=sort(table(ta.ex.un.3),decreasing = T)
+############wordcloud1
+wordcloud2(text.c1,0.5) #시각화
+############wordcloud2
+wordcloud2(text.c2,0.5)
+############wordcloud3
+wordcloud2(text.c3,0.5)
+############paste
+ta.all=cbind(ta.ex.un.1,ta.ex.un.2,ta.ex.un.3)
+ta.all=paste(ta.ex.un.1,ta.ex.un.2,ta.ex.un.3)
+############wordcloud4
+text.c4=sort(table(ta.all),decreasing = T)
+wordcloud2(text.c4,0.5)
+###########################
+
+str(tx2) #구조확인
+dim(tx1) #차원확인
+
+tx2=extractNoun(ta.lec)
+
+tx3=unlist(tx2)
+tx4=as.character(tx1)
+useNIADic()
+Cstack_info()
+dtm=DocumentTermMatrix(tx1) #명사추출
+text2=sort(table(tx2),decreasing = T,30) #300개 row 내림차순정렬 후 상위 300개 선정
+wordcloud2(text2,0.5) #시각화
+tx4=mergeMethods("개물","개물림")
+mergeMethods("개물","개물림")
+mergeUserDic(data.frame(c("개물림"), "ncn"))
+table(text2)
+str()
+
+write.csv(tibb.new,file = "C:/a/A.csv")
+
+#############tibble 사용
+ti=text1
+tib=paste(ti)
+text_df <- tibble(seq = 1:length(tib),text = tib)
+tibb=text_df %>% 
+  unnest_tokens(
+    input = text,
+    output = "word"
+  )
+tibb.tx=tibb$word
+text.ti=sort(table(tibb.tx),decreasing = T)
+text.ti.list=as.list(text.ti)
+wordcloud2(text.ti,1.5)
+
+####################lecnew 전기전자+신기술
+text.new=read.csv("C:/a/lecnew.csv") #데이터 불러오기
+tib.new=paste(text.new)
+text_df.new <- tibble(seq = 1:length(tib.new),text = tib.new)
+tibb.new=text_df.new %>% 
+  unnest_tokens(
+    input = text,
+    output = "word"
+  )
+tibb.new=tibb.new$word
+text.ti.new=sort(table(tibb.new),decreasing = T)
+text.ti.list=as.list(text.ti)
+wordcloud2(text.ti.new,1.5)
+
+####################가상화폐 + 신기술
+text.new=read.csv("C:/a/coin.csv") #데이터 불러오기
+tib.new=paste(text.new)
+text_df.new <- tibble(seq = 1:length(tib.new),text = tib.new)
+tibb.new=text_df.new %>% 
+  unnest_tokens(
+    input = text,
+    output = "word"
+  )
+tibb.new=tibb.new$word
+text.ti.new=sort(table(tibb.new),decreasing = T)
+text.ti.list=as.list(text.ti)
+wordcloud2(text.ti.new,1.5)
