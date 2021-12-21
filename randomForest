@@ -1,0 +1,62 @@
+###랜덤포레스트
+install.packages("randomForest")
+library(randomForest)
+install.packages("tidymodels")
+library(tidymodels)
+library(MASS)
+LM=read.csv("c:/a/LM.m.csv")
+attach(LM)
+LM.ra=randomForest(updown~day+jobs+sex+seed+age+devlop,nodesize=7,mtry=2,ntree=21,data = LM)
+set.seed(1254)
+LM.ra=randomForest(updown~day+jobs+sex+seed+age+devlop,mtry=6,ntree=200,data = LM) #완료
+LM.ra
+summary(LM.ra)
+LM.ra$predicted
+plot(LM.ra)
+which.min(LM.ra$mse)
+SL=sample(1:nrow(LM),nrow(LM)*0.7,replace = FALSE) #랜덤
+train=LM[SL,]
+text=LM[-SL,]
+y_pred=predict(LM.ra,test)
+test
+##########
+LM.ra=randomForest(updown~day+jobs+sex+seed+age+devlop,nodesize=4,mtry=6,ntree=60,data = LM)
+train.LM=randomForest(updown~day+jobs+sex+seed+age+devlop,nodesize=4,mtry=6,ntree=100,data = train)
+test.LM=randomForest(updown~day+jobs+sex+seed+age+devlop,nodesize=4,mtry=6,ntree=100,data = text)
+pred.train=predict(train.LM,newdata = text)
+pred.test=predict()
+(pred.train)
+cor()
+
+write.csv(LM.ra$predicted,file = "C:/a/A.csv")
+plot(LM.ra$importance)
+importance(LM.ra)
+varImpPlot(LM.ra)
+########
+model_rf=randomForest(updown~.,mtry=6,ntree=50,data=train)
+y_pred_train_rf=predict(model_rf,newdata = train)
+y_pred_test_rf=predict(model_rf,newdata = text)
+cor(y_pred_test_rf,text)
+
+str(y_pred_train_rf)
+######################
+rf.fit=randomForest(updown.v~.,data = LM.v,mtry=3,ntree=200,importance=T)
+updown.v=as.vector(LM$updown)
+LM.v=data.frame(LM,updown.v)
+str(updown.v)
+
+
+#######################
+a=table(y_pred_test_rf,text$updown)
+install.packages("forecast")
+library(forecast)
+install.packages("ROCR")
+library(ROCR)
+install.packages("caret")
+library(caret)
+pred.rf=predict(model_rf,text,type = "class")
+caret::confusionMatrix(pred.rf,reference=text,positive="survived")
+
+
+x=23
+if(x>0) {print("Ture")} else print("False")
