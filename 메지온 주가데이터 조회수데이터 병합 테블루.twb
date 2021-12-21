@@ -1,0 +1,597 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20213.21.1018.0949                               -->
+<workbook original-version='18.1' source-build='2021.3.3 (20213.21.1018.0949)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <SortTagCleanup />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource caption='메지온 주가데이터 조회수데이터 병합' inline='true' name='federated.0wmynsv01t3cw519fbmjc1idp4ai' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='메지온 주가데이터 조회수데이터 병합' name='textscan.1oqbjtw0mpycoj13w6srw1lwmk5f'>
+            <connection class='textclean' cleaning='yes' compat='no' csvFile='C:/Users/dong/Desktop/메지온 종목토론방 분석/메지온 주가데이터 조회수데이터 병합.csv' dataRefreshTime='' directory='C:/Users/dong/Desktop/메지온 종목토론방 분석' filename='C:/Users/dong/AppData/Local/Temp/TableauTemp/10vin640gikmrd1gb11160f6xcgh/메지온 주가데이터 조회수데이터 병합.csv.xlsx' interpretationMode='8' password='' server='' validate='no' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='textscan.1oqbjtw0mpycoj13w6srw1lwmk5f' name='메지온 주가데이터 조회수데이터 병합.csv' table='[메지온 주가데이터 조회수데이터 병합#csv$]' type='table'>
+          <columns character-set='EUC-KR' gridOrigin='A1:O1090:no:A1:O1090:1' header='yes' locale='ko_KR' separator=','>
+            <column datatype='integer' name='주가' ordinal='0' />
+            <column datatype='string' name='전일대비' ordinal='1' />
+            <column datatype='integer' name='F3' ordinal='2' />
+            <column datatype='integer' name='거래량' ordinal='3' />
+            <column datatype='integer' name='변동수량' ordinal='4' />
+            <column datatype='real' name='보유비중' ordinal='5' />
+            <column datatype='integer' name='보유주식수' ordinal='6' />
+            <column datatype='integer' name='취득가능주식수' ordinal='7' />
+            <column datatype='integer' name='외국인한도' ordinal='8' />
+            <column datatype='real' name='한도소진율' ordinal='9' />
+            <column datatype='date' name='일자' ordinal='10' />
+            <column datatype='date' name='종토방일자' ordinal='11' />
+            <column datatype='integer' name='조회수' ordinal='12' />
+            <column datatype='integer' name='공감' ordinal='13' />
+            <column datatype='integer' name='비공감' ordinal='14' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='textscan.1oqbjtw0mpycoj13w6srw1lwmk5f' name='메지온 주가데이터 조회수데이터 병합.csv' table='[메지온 주가데이터 조회수데이터 병합#csv$]' type='table'>
+          <columns character-set='EUC-KR' gridOrigin='A1:O1090:no:A1:O1090:1' header='yes' locale='ko_KR' separator=','>
+            <column datatype='integer' name='주가' ordinal='0' />
+            <column datatype='string' name='전일대비' ordinal='1' />
+            <column datatype='integer' name='F3' ordinal='2' />
+            <column datatype='integer' name='거래량' ordinal='3' />
+            <column datatype='integer' name='변동수량' ordinal='4' />
+            <column datatype='real' name='보유비중' ordinal='5' />
+            <column datatype='integer' name='보유주식수' ordinal='6' />
+            <column datatype='integer' name='취득가능주식수' ordinal='7' />
+            <column datatype='integer' name='외국인한도' ordinal='8' />
+            <column datatype='real' name='한도소진율' ordinal='9' />
+            <column datatype='date' name='일자' ordinal='10' />
+            <column datatype='date' name='종토방일자' ordinal='11' />
+            <column datatype='integer' name='조회수' ordinal='12' />
+            <column datatype='integer' name='공감' ordinal='13' />
+            <column datatype='integer' name='비공감' ordinal='14' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='integer' name='context'>0</attribute>
+              <attribute datatype='string' name='gridOrigin'>&quot;A1:O1090:no:A1:O1090:1&quot;</attribute>
+              <attribute datatype='integer' name='lost'>0</attribute>
+              <attribute datatype='integer' name='outcome'>1</attribute>
+              <attribute datatype='integer' name='processed'>15242</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>주가</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[주가]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>주가</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>전일대비</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[전일대비]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>전일대비</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LKO_RKR_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>F3</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[F3]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>F3</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>거래량</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[거래량]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>거래량</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>변동수량</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[변동수량]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>변동수량</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>보유비중</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[보유비중]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>보유비중</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>보유주식수</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[보유주식수]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>보유주식수</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>취득가능주식수</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[취득가능주식수]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>취득가능주식수</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>외국인한도</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[외국인한도]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>외국인한도</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>한도소진율</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[한도소진율]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>한도소진율</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <precision>15</precision>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;R8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>일자</remote-name>
+            <remote-type>7</remote-type>
+            <local-name>[일자]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>일자</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;DATE&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>종토방일자</remote-name>
+            <remote-type>7</remote-type>
+            <local-name>[종토방일자]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>종토방일자</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;DATE&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>조회수</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[조회수]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>조회수</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>공감</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[공감]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>공감</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>비공감</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[비공감]</local-name>
+            <parent-name>[메지온 주가데이터 조회수데이터 병합.csv]</parent-name>
+            <remote-alias>비공감</remote-alias>
+            <ordinal>14</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <_.fcp.ObjectModelTableType.true...column caption='메지온 주가데이터 조회수데이터 병합.csv' datatype='table' name='[__tableau_internal_object_id__].[메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[거래량]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[공감]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[변동수량]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[비공감]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[조회수]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[주가]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[취득가능주식수]' role='measure' type='quantitative' />
+      <column-instance column='[Forecast Indicator]' derivation='None' forecast-column-base='[Forecast Indicator]' forecast-column-type='forecast-indicator' name='[none:Forecast Indicator:nk]' pivot='key' type='nominal' />
+      <column-instance column='[거래량]' derivation='Sum' name='[sum:거래량:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[공감]' derivation='Sum' name='[sum:공감:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[변동수량]' derivation='Sum' name='[sum:변동수량:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[비공감]' derivation='Sum' name='[sum:비공감:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[조회수]' derivation='Sum' name='[sum:조회수:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[주가]' derivation='Sum' name='[sum:주가:qk]' pivot='key' type='quantitative' />
+      <column-instance column='[취득가능주식수]' derivation='Sum' name='[sum:취득가능주식수:qk]' pivot='key' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[:Measure Names]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;[federated.0wmynsv01t3cw519fbmjc1idp4ai].[sum:공감:qk]&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;[federated.0wmynsv01t3cw519fbmjc1idp4ai].[sum:거래량:qk]&quot;</bucket>
+            </map>
+            <map to='#76b7b2'>
+              <bucket>&quot;[federated.0wmynsv01t3cw519fbmjc1idp4ai].[sum:주가:qk]&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;[federated.0wmynsv01t3cw519fbmjc1idp4ai].[sum:변동수량:qk]&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;[federated.0wmynsv01t3cw519fbmjc1idp4ai].[sum:조회수:qk]&quot;</bucket>
+            </map>
+            <map to='#edc948'>
+              <bucket>&quot;[federated.0wmynsv01t3cw519fbmjc1idp4ai].[sum:취득가능주식수:qk]&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;[federated.0wmynsv01t3cw519fbmjc1idp4ai].[sum:비공감:qk]&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;대한민국&quot;' />
+      </semantic-values>
+      <default-sorts>
+        <manual-sort column='[none:Forecast Indicator:nk]' direction='ASC'>
+          <dictionary>
+            <bucket>&quot;실제&quot;</bucket>
+            <bucket>&quot;예상&quot;</bucket>
+          </dictionary>
+        </manual-sort>
+      </default-sorts>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='메지온 주가데이터 조회수데이터 병합.csv' id='메지온 주가데이터 조회수데이터 병합.csv_424123964B554893A234C099171E5174'>
+            <properties context=''>
+              <relation connection='textscan.1oqbjtw0mpycoj13w6srw1lwmk5f' name='메지온 주가데이터 조회수데이터 병합.csv' table='[메지온 주가데이터 조회수데이터 병합#csv$]' type='table'>
+                <columns character-set='EUC-KR' gridOrigin='A1:O1090:no:A1:O1090:1' header='yes' locale='ko_KR' separator=','>
+                  <column datatype='integer' name='주가' ordinal='0' />
+                  <column datatype='string' name='전일대비' ordinal='1' />
+                  <column datatype='integer' name='F3' ordinal='2' />
+                  <column datatype='integer' name='거래량' ordinal='3' />
+                  <column datatype='integer' name='변동수량' ordinal='4' />
+                  <column datatype='real' name='보유비중' ordinal='5' />
+                  <column datatype='integer' name='보유주식수' ordinal='6' />
+                  <column datatype='integer' name='취득가능주식수' ordinal='7' />
+                  <column datatype='integer' name='외국인한도' ordinal='8' />
+                  <column datatype='real' name='한도소진율' ordinal='9' />
+                  <column datatype='date' name='일자' ordinal='10' />
+                  <column datatype='date' name='종토방일자' ordinal='11' />
+                  <column datatype='integer' name='조회수' ordinal='12' />
+                  <column datatype='integer' name='공감' ordinal='13' />
+                  <column datatype='integer' name='비공감' ordinal='14' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='시트 1'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='메지온 주가데이터 조회수데이터 병합' name='federated.0wmynsv01t3cw519fbmjc1idp4ai' />
+          </datasources>
+          <datasource-dependencies datasource='federated.0wmynsv01t3cw519fbmjc1idp4ai'>
+            <column-instance column='[주가]' derivation='Sum' name='[sum:주가:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[일자]' derivation='Day-Trunc' name='[tdy:일자:qk]' pivot='key' type='quantitative' />
+            <column datatype='date' name='[일자]' role='dimension' type='ordinal' />
+            <column datatype='integer' name='[주가]' role='measure' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane id='3' selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows>[federated.0wmynsv01t3cw519fbmjc1idp4ai].[sum:주가:qk]</rows>
+        <cols>[federated.0wmynsv01t3cw519fbmjc1idp4ai].[tdy:일자:qk]</cols>
+      </table>
+      <simple-id uuid='{19A842DD-C7DB-46F5-8A94-D80529197CB2}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='30'>
+    <window class='worksheet' maximized='true' name='시트 1'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.0wmynsv01t3cw519fbmjc1idp4ai].[:Measure Names]</field>
+            <field>[federated.0wmynsv01t3cw519fbmjc1idp4ai].[yr:일자:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{624E837F-C189-4DB6-8629-2EDED4F760A6}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='192' name='시트 1' width='192'>
+      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
+    </thumbnail>
+  </thumbnails>
+</workbook>
