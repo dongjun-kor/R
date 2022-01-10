@@ -1,0 +1,36 @@
+source("https://install-github.me/talgalili/installr")
+installr::install.java()
+install.packages("Sejong")
+install.packages("hash")
+install.packages("rJava")
+install.packages("tau")
+install.packages("RSQLite")
+install.packages("devtools")
+
+install.packages("devtools", dependencies=TRUE, INSTALL_opts = c('--no-lock')) #작동이 안될시,
+devtools::install_github('haven-jeon/KoNLP')
+install.packages("remote")
+library(remotes)
+remotes::install_github('haven-jeon/KoNLP',upgrade="never",INSTALL_opt=c("--no-multiarch"))
+library(KoNLP)
+install.packages("wordcloud2")
+library(wordcloud2)
+#########################
+
+news=read.csv("c:/a/a/headline.csv")
+
+useNIADic() #형태소 분석을 위한, 사전추가하기
+
+news.paste=paste(news) #여러개의 관측치를 하나의 관측치로 바꿔주기
+
+news.paste.gsub=gsub("[[:punct:]]", " ", news.paste)
+
+news.extract=extractNoun(news.paste.gsub)
+
+news.extract.dec=sort(table(news.extract),decreasing = T,100)
+
+wordcloud2(news.extract.dec)
+
+news.extract.gsub=gsub("중국", "", news.extract) #중국 단어 지우기
+news.extract.gsub.dec=sort(table(news.extract.gsub),decreasing = T,100)
+wordcloud2(news.extract.gsub.dec,3) #워드클라우드 크기 키우기
