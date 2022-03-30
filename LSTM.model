@@ -13,6 +13,8 @@ library(keras)
 library(tensorflow)
 library(ggplot2)
 library(timetk)
+
+
 #####################사용패키지
 test=read.csv("C:/a/IPC5.csv")
 #######################데이터 표준화
@@ -296,16 +298,16 @@ LSTM.data=data.frame(Date,N.scale)
 plot(f,type="l")
 #####################
 economics
-scale_factors <- c(mean(economics$unemploy), sd(economics$unemploy))
-scaled_train <- economics %>%
-  dplyr::select(unemploy) %>%
-  dplyr::mutate(unemploy = (unemploy - scale_factors[1]) / scale_factors[2])
+scale_factors <- c(mean(LSTM.r$N), sd(LSTM.r$N))
+scaled_train <- LSTM.data[,2] #economics %>%
+  #dplyr::select(unemploy) %>%
+  #dplyr::mutate(unemploy = (unemploy - scale_factors[1]) / scale_factors[2])
 
 prediction <- 12
 lag <- prediction
 
 
-scaled_train <- as.matrix(LSTM.data[,2])
+scaled_train <- as.matrix(scaled_train)
 
 # we lag the data 11 times and arrange that into columns
 x_train_data <- t(sapply(
@@ -353,7 +355,7 @@ y_train_arr <- array(
 )
 
 
-x_test <- testdata[,2][(nrow(scaled_train) - prediction + 1):nrow(scaled_train)]
+x_test <- LSTM.r[,2][(nrow(scaled_train) - prediction + 1):nrow(scaled_train)]
 
 # scale the data with same scaling factors as for training
 x_test_scaled <- (x_test - scale_factors[1]) / scale_factors[2]
@@ -415,17 +417,17 @@ fitted <- predict(lstm_model, x_train_arr, batch_size = 1) %>%
 
 
 lstm_forecast <- timetk::tk_ts(lstm_forecast,
-                               start = c(2021, 5),
-                               end = c(2023, 5),
+                               start = c(2021, 12),
+                               end = c(2022, 12),
                                frequency = 12
 )
 
 
 
 
-input_ts <- timetk::tk_ts(economics$unemploy, 
-                          start = c(2000, 7), 
-                          end = c(2021, 4), 
+input_ts <- timetk::tk_ts(LSTM.data$N.scale, 
+                          start = c(2000, 9), 
+                          end = c(2021, 11), 
                           frequency = 12)
 
 
