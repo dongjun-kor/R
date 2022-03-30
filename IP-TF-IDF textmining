@@ -1,0 +1,616 @@
+library(plyr)
+library(TTR)
+library(forecast)
+library(tseries)
+library(KoNLP)
+library(tidytext)
+library(dplyr)
+library(tidyverse)
+library(reshape)
+install.packages("reshape")
+###################불러오기
+text.year=read.csv("C:/a/el.csv")
+year=as.character(text.year$day)
+word=text.year$B
+maintext=data.frame(year,word)
+maintext.t=tibble(maintext)
+##################연도별 분리
+maintext.t.2021=maintext.t[maintext.t$year=="2021",]
+maintext.t.2020=maintext.t[maintext.t$year=="2020",]
+maintext.t.2019=maintext.t[maintext.t$year=="2019",]
+maintext.t.2018=maintext.t[maintext.t$year=="2018",]
+maintext.t.2017=maintext.t[maintext.t$year=="2017",]
+maintext.t.2016=maintext.t[maintext.t$year=="2016",]
+maintext.t.2015=maintext.t[maintext.t$year=="2015",]
+maintext.t.2014=maintext.t[maintext.t$year=="2014",]
+maintext.t.2013=maintext.t[maintext.t$year=="2013",]
+maintext.t.2012=maintext.t[maintext.t$year=="2012",]
+maintext.t.2011=maintext.t[maintext.t$year=="2011",]
+maintext.t.2010=maintext.t[maintext.t$year=="2010",]
+maintext.t.2009=maintext.t[maintext.t$year=="2009",]
+maintext.t.2008=maintext.t[maintext.t$year=="2008",]
+maintext.t.2007=maintext.t[maintext.t$year=="2007",]
+maintext.t.2006=maintext.t[maintext.t$year=="2006",]
+maintext.t.2005=maintext.t[maintext.t$year=="2005",]
+maintext.t.2004=maintext.t[maintext.t$year=="2004",]
+#################워드 분리
+maintext.t.w.2021=maintext.t.2021$word
+maintext.t.w.2020=maintext.t.2020$word
+maintext.t.w.2019=maintext.t.2019$word
+maintext.t.w.2018=maintext.t.2018$word
+maintext.t.w.2017=maintext.t.2017$word
+maintext.t.w.2016=maintext.t.2016$word
+maintext.t.w.2015=maintext.t.2015$word
+maintext.t.w.2014=maintext.t.2014$word
+maintext.t.w.2013=maintext.t.2013$word
+maintext.t.w.2012=maintext.t.2012$word
+maintext.t.w.2011=maintext.t.2011$word
+maintext.t.w.2010=maintext.t.2010$word
+maintext.t.w.2009=maintext.t.2009$word
+maintext.t.w.2008=maintext.t.2008$word
+maintext.t.w.2007=maintext.t.2007$word
+maintext.t.w.2006=maintext.t.2006$word
+maintext.t.w.2005=maintext.t.2005$word
+maintext.t.w.2004=maintext.t.2004$word
+#################특수문자 제거
+maintext.t.w.g.2021a=gsub("[[:punct:]]", " ", maintext.t.w.2021)
+maintext.t.w.g.2020a=gsub("[[:punct:]]", " ", maintext.t.w.2020)
+maintext.t.w.g.2019a=gsub("[[:punct:]]", " ", maintext.t.w.2019)
+maintext.t.w.g.2018a=gsub("[[:punct:]]", " ", maintext.t.w.2018)
+maintext.t.w.g.2017a=gsub("[[:punct:]]", " ", maintext.t.w.2017)
+maintext.t.w.g.2016a=gsub("[[:punct:]]", " ", maintext.t.w.2016)
+maintext.t.w.g.2015a=gsub("[[:punct:]]", " ", maintext.t.w.2015)
+maintext.t.w.g.2014a=gsub("[[:punct:]]", " ", maintext.t.w.2014)
+maintext.t.w.g.2013a=gsub("[[:punct:]]", " ", maintext.t.w.2013)
+maintext.t.w.g.2012a=gsub("[[:punct:]]", " ", maintext.t.w.2012)
+maintext.t.w.g.2011a=gsub("[[:punct:]]", " ", maintext.t.w.2011)
+maintext.t.w.g.2010a=gsub("[[:punct:]]", " ", maintext.t.w.2010)
+maintext.t.w.g.2009a=gsub("[[:punct:]]", " ", maintext.t.w.2009)
+maintext.t.w.g.2008a=gsub("[[:punct:]]", " ", maintext.t.w.2008)
+maintext.t.w.g.2007a=gsub("[[:punct:]]", " ", maintext.t.w.2007)
+maintext.t.w.g.2006a=gsub("[[:punct:]]", " ", maintext.t.w.2006)
+maintext.t.w.g.2005a=gsub("[[:punct:]]", " ", maintext.t.w.2005)
+maintext.t.w.g.2004a=gsub("[[:punct:]]", " ", maintext.t.w.2004)
+################숫자제거(이 코드는 일시적으로 사용하지 말것)
+maintext.t.w.g.2021=gsub("\\d+", " ", maintext.t.w.g.2021a)
+maintext.t.w.g.2020=gsub("\\d+", " ", maintext.t.w.g.2020a)
+maintext.t.w.g.2019=gsub("\\d+", " ", maintext.t.w.g.2019a)
+maintext.t.w.g.2018=gsub("\\d+", " ", maintext.t.w.g.2018a)
+maintext.t.w.g.2017=gsub("\\d+", " ", maintext.t.w.g.2017a)
+maintext.t.w.g.2016=gsub("\\d+", " ", maintext.t.w.g.2016a)
+maintext.t.w.g.2015=gsub("\\d+", " ", maintext.t.w.g.2015a)
+maintext.t.w.g.2014=gsub("\\d+", " ", maintext.t.w.g.2014a)
+maintext.t.w.g.2013=gsub("\\d+", " ", maintext.t.w.g.2013a)
+maintext.t.w.g.2012=gsub("\\d+", " ", maintext.t.w.g.2012a)
+maintext.t.w.g.2011=gsub("\\d+", " ", maintext.t.w.g.2011a)
+maintext.t.w.g.2010=gsub("\\d+", " ", maintext.t.w.g.2010a)
+maintext.t.w.g.2009=gsub("\\d+", " ", maintext.t.w.g.2009a)
+maintext.t.w.g.2008=gsub("\\d+", " ", maintext.t.w.g.2008a)
+maintext.t.w.g.2007=gsub("\\d+", " ", maintext.t.w.g.2007a)
+maintext.t.w.g.2006=gsub("\\d+", " ", maintext.t.w.g.2006a)
+maintext.t.w.g.2005=gsub("\\d+", " ", maintext.t.w.g.2005a)
+maintext.t.w.g.2004=gsub("\\d+", " ", maintext.t.w.g.2004a)
+################각각 문서 분리
+maintext.t.w.g.t.2021 <- tibble(seq = 1:length(maintext.t.w.g.2021),text = maintext.t.w.g.2021) 
+
+########################2020
+maintext.t.w.g.t.2020 <- tibble(seq = 1:length(maintext.t.w.g.2020),text = maintext.t.w.g.2020)
+
+#######################2019
+maintext.t.w.g.t.2019 <- tibble(seq = 1:length(maintext.t.w.g.2019),text = maintext.t.w.g.2019)
+
+######################2018
+maintext.t.w.g.t.2018 <- tibble(seq = 1:length(maintext.t.w.g.2018),text = maintext.t.w.g.2018)
+
+######################2017
+maintext.t.w.g.t.2017 <- tibble(seq = 1:length(maintext.t.w.g.2017),text = maintext.t.w.g.2017)
+
+#####################2016
+maintext.t.w.g.t.2016 <- tibble(seq = 1:length(maintext.t.w.g.2016),text = maintext.t.w.g.2016)
+
+#####################2015
+maintext.t.w.g.t.2015 <- tibble(seq = 1:length(maintext.t.w.g.2015),text = maintext.t.w.g.2015)
+
+######################2014
+maintext.t.w.g.t.2014 <- tibble(seq = 1:length(maintext.t.w.g.2014),text = maintext.t.w.g.2014)
+
+######################2013
+maintext.t.w.g.t.2013 <- tibble(seq = 1:length(maintext.t.w.g.2013),text = maintext.t.w.g.2013)
+
+######################2012
+maintext.t.w.g.t.2012 <- tibble(seq = 1:length(maintext.t.w.g.2012),text = maintext.t.w.g.2012)
+
+######################2011
+maintext.t.w.g.t.2011 <- tibble(seq = 1:length(maintext.t.w.g.2011),text = maintext.t.w.g.2011)
+
+######################2010
+maintext.t.w.g.t.2010 <- tibble(seq = 1:length(maintext.t.w.g.2010),text = maintext.t.w.g.2010)
+
+######################2009
+maintext.t.w.g.t.2009 <- tibble(seq = 1:length(maintext.t.w.g.2009),text = maintext.t.w.g.2009)
+
+######################2008
+maintext.t.w.g.t.2008 <- tibble(seq = 1:length(maintext.t.w.g.2008),text = maintext.t.w.g.2008)
+
+######################2007
+maintext.t.w.g.t.2007 <- tibble(seq = 1:length(maintext.t.w.g.2007),text = maintext.t.w.g.2007)
+
+######################2006
+maintext.t.w.g.t.2006 <- tibble(seq = 1:length(maintext.t.w.g.2006),text = maintext.t.w.g.2006)
+
+######################2005
+maintext.t.w.g.t.2005 <- tibble(seq = 1:length(maintext.t.w.g.2005),text = maintext.t.w.g.2005)
+
+######################2004
+maintext.t.w.g.t.2004 <- tibble(seq = 1:length(maintext.t.w.g.2004),text = maintext.t.w.g.2004)
+
+##################단절음 제거
+tx2021=extractNoun(maintext.t.w.g.2021)
+tx2020=extractNoun(maintext.t.w.g.2020)
+tx2019=extractNoun(maintext.t.w.g.2019)
+tx2018=extractNoun(maintext.t.w.g.2018)
+tx2017=extractNoun(maintext.t.w.g.2017)
+tx2016=extractNoun(maintext.t.w.g.2016)
+tx2015=extractNoun(maintext.t.w.g.2015)
+tx2014=extractNoun(maintext.t.w.g.2014)
+tx2013=extractNoun(maintext.t.w.g.2013)
+tx2012=extractNoun(maintext.t.w.g.2012)
+tx2011=extractNoun(maintext.t.w.g.2011)
+tx2010=extractNoun(maintext.t.w.g.2010)
+tx2009=extractNoun(maintext.t.w.g.2009)
+tx2008=extractNoun(maintext.t.w.g.2008)
+tx2007=extractNoun(maintext.t.w.g.2007)
+tx2006=extractNoun(maintext.t.w.g.2006)
+tx2005=extractNoun(maintext.t.w.g.2005)
+tx2004=extractNoun(maintext.t.w.g.2004)
+##################extractNone 데이터 tibble 데이터로 변환
+tb2021=tibble(seq = 1:length(tx2021),text = tx2021)
+tb2020=tibble(seq = 1:length(tx2020),text = tx2020)
+tb2019=tibble(seq = 1:length(tx2019),text = tx2019)
+tb2018=tibble(seq = 1:length(tx2018),text = tx2018)
+tb2017=tibble(seq = 1:length(tx2017),text = tx2017)
+tb2016=tibble(seq = 1:length(tx2016),text = tx2016)
+tb2015=tibble(seq = 1:length(tx2015),text = tx2015)
+tb2014=tibble(seq = 1:length(tx2014),text = tx2014)
+tb2013=tibble(seq = 1:length(tx2013),text = tx2013)
+tb2012=tibble(seq = 1:length(tx2012),text = tx2012)
+tb2011=tibble(seq = 1:length(tx2011),text = tx2011)
+tb2010=tibble(seq = 1:length(tx2010),text = tx2010)
+tb2009=tibble(seq = 1:length(tx2009),text = tx2009)
+tb2008=tibble(seq = 1:length(tx2008),text = tx2008)
+tb2007=tibble(seq = 1:length(tx2007),text = tx2007)
+tb2006=tibble(seq = 1:length(tx2006),text = tx2006)
+tb2005=tibble(seq = 1:length(tx2005),text = tx2005)
+tb2004=tibble(seq = 1:length(tx2004),text = tx2004)
+##################tibble데이터 뜯어내기
+#################2021
+df2021= data.frame()
+for(i in 1:length(tx2021)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2021$text[i]))
+  df2021 = rbind(df2021, df_sub)
+}
+################2020
+df2020= data.frame()
+for(i in 1:length(tx2020)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2020$text[i]))
+  df2020 = rbind(df2020, df_sub)
+}
+#################2019
+df2019= data.frame()
+for(i in 1:length(tx2019)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2019$text[i]))
+  df2019 = rbind(df2019, df_sub)
+}
+################2018
+df2018= data.frame()
+for(i in 1:length(tx2018)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2018$text[i]))
+  df2018 = rbind(df2018, df_sub)
+}
+################2017
+df2017= data.frame()
+for(i in 1:length(tx2017)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2017$text[i]))
+  df2017 = rbind(df2017, df_sub)
+}
+################2016
+df2016= data.frame()
+for(i in 1:length(tx2016)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2016$text[i]))
+  df2016 = rbind(df2016, df_sub)
+}
+################2015
+df2015= data.frame()
+for(i in 1:length(tx2015)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2015$text[i]))
+  df2015 = rbind(df2015, df_sub)
+}
+################2014
+df2014= data.frame()
+for(i in 1:length(tx2014)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2014$text[i]))
+  df2014 = rbind(df2014, df_sub)
+}
+################2013
+df2013= data.frame()
+for(i in 1:length(tx2013)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2013$text[i]))
+  df2013 = rbind(df2013, df_sub)
+}
+################2012
+df2012= data.frame()
+for(i in 1:length(tx2012)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2012$text[i]))
+  df2012 = rbind(df2012, df_sub)
+}
+################2011
+df2011= data.frame()
+for(i in 1:length(tx2011)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2011$text[i]))
+  df2011 = rbind(df2011, df_sub)
+}
+################2010
+df2010= data.frame()
+for(i in 1:length(tx2010)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2010$text[i]))
+  df2010 = rbind(df2010, df_sub)
+}
+################2009
+df2009= data.frame()
+for(i in 1:length(tx2009)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2009$text[i]))
+  df2009 = rbind(df2009, df_sub)
+}
+################2008
+df2008= data.frame()
+for(i in 1:length(tx2008)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2008$text[i]))
+  df2008 = rbind(df2008, df_sub)
+}
+################2007
+df2007= data.frame()
+for(i in 1:length(tx2007)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2007$text[i]))
+  df2007 = rbind(df2007, df_sub)
+}
+################2006
+df2006= data.frame()
+for(i in 1:length(tx2006)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2006$text[i]))
+  df2006 = rbind(df2006, df_sub)
+}
+################2005
+df2005= data.frame()
+for(i in 1:length(tx2005)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2005$text[i]))
+  df2005 = rbind(df2005, df_sub)
+}
+################2004
+df2004= data.frame()
+for(i in 1:length(tx2004)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(tb2004$text[i]))
+  df2004 = rbind(df2004, df_sub)
+}
+
+#################TF-IDF분석 + 단절음 제거
+tokens.count.2021=df2021 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2020=df2020 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2019=df2019 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2018=df2018 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2017=df2017 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2016=df2016 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2015=df2015 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2014=df2014 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2013=df2013 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2012=df2012 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2011=df2011 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2010=df2010 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2009=df2009 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2008=df2008 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2007=df2007 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2006=df2006 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2005=df2005 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+tokens.count.2004=df2004 %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+###
+year=2021
+tibb.new.TF.2021=data.frame(tokens.count.2021,year)
+######################2020
+year=2020
+tibb.new.TF.2020=data.frame(tokens.count.2020,year)
+######################2019
+year=2019
+tibb.new.TF.2019=data.frame(tokens.count.2019,year)
+######################2018
+year=2018
+tibb.new.TF.2018=data.frame(tokens.count.2018,year)
+######################2017
+year=2017
+tibb.new.TF.2017=data.frame(tokens.count.2017,year)
+######################2016
+year=2016
+tibb.new.TF.2016=data.frame(tokens.count.2016,year)
+######################2015
+year=2015
+tibb.new.TF.2015=data.frame(tokens.count.2015,year)
+######################2014
+year=2014
+tibb.new.TF.2014=data.frame(tokens.count.2014,year)
+######################2013
+year=2013
+tibb.new.TF.2013=data.frame(tokens.count.2013,year)
+######################2012
+year=2012
+tibb.new.TF.2012=data.frame(tokens.count.2012,year)
+######################2011
+year=2011
+tibb.new.TF.2011=data.frame(tokens.count.2011,year)
+######################2010
+year=2010
+tibb.new.TF.2010=data.frame(tokens.count.2010,year)
+######################2009
+year=2009
+tibb.new.TF.2009=data.frame(tokens.count.2009,year)
+######################2008
+year=2008
+tibb.new.TF.2008=data.frame(tokens.count.2008,year)
+######################2007
+year=2007
+tibb.new.TF.2007=data.frame(tokens.count.2007,year)
+######################2006
+year=2006
+tibb.new.TF.2006=data.frame(tokens.count.2006,year)
+######################2005
+year=2005
+tibb.new.TF.2005=data.frame(tokens.count.2005,year)
+######################2004
+year=2004
+tibb.new.TF.2004=data.frame(tokens.count.2004,year)
+############################################같은 행끼리 합치기 및 평균
+meandata2021=ddply(tibb.new.TF.2021,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2020=ddply(tibb.new.TF.2020,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2019=ddply(tibb.new.TF.2019,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2018=ddply(tibb.new.TF.2018,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2017=ddply(tibb.new.TF.2017,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2016=ddply(tibb.new.TF.2016,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2015=ddply(tibb.new.TF.2015,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2014=ddply(tibb.new.TF.2014,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2013=ddply(tibb.new.TF.2013,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2012=ddply(tibb.new.TF.2012,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2011=ddply(tibb.new.TF.2011,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2010=ddply(tibb.new.TF.2010,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2009=ddply(tibb.new.TF.2009,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2008=ddply(tibb.new.TF.2008,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2007=ddply(tibb.new.TF.2007,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2006=ddply(tibb.new.TF.2006,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2005=ddply(tibb.new.TF.2005,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+meandata2004=ddply(tibb.new.TF.2004,.(token,year,n),summarise,seq=length(token),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+
+
+########################표준화
+scale=scale(meandata2021$mean_tfidf,center = T,scale = TRUE)
+s2021=data.frame(meandata2021,scale)
+scale=scale(meandata2020$mean_tfidf,center = T,scale = TRUE)
+s2020=data.frame(meandata2020,scale)
+scale=scale(meandata2019$mean_tfidf,center = T,scale = TRUE)
+s2019=data.frame(meandata2019,scale)
+scale=scale(meandata2018$mean_tfidf,center = T,scale = TRUE)
+s2018=data.frame(meandata2018,scale)
+scale=scale(meandata2017$mean_tfidf,center = T,scale = TRUE)
+s2017=data.frame(meandata2017,scale)
+scale=scale(meandata2016$mean_tfidf,center = T,scale = TRUE)
+s2016=data.frame(meandata2016,scale)
+scale=scale(meandata2015$mean_tfidf,center = T,scale = TRUE)
+s2015=data.frame(meandata2015,scale)
+scale=scale(meandata2014$mean_tfidf,center = T,scale = TRUE)
+s2014=data.frame(meandata2014,scale)
+scale=scale(meandata2013$mean_tfidf,center = T,scale = TRUE)
+s2013=data.frame(meandata2013,scale)
+scale=scale(meandata2012$mean_tfidf,center = T,scale = TRUE)
+s2012=data.frame(meandata2012,scale)
+scale=scale(meandata2011$mean_tfidf,center = T,scale = TRUE)
+s2011=data.frame(meandata2011,scale)
+scale=scale(meandata2010$mean_tfidf,center = T,scale = TRUE)
+s2010=data.frame(meandata2010,scale)
+scale=scale(meandata2009$mean_tfidf,center = T,scale = TRUE)
+s2009=data.frame(meandata2009,scale)
+scale=scale(meandata2008$mean_tfidf,center = T,scale = TRUE)
+s2008=data.frame(meandata2008,scale)
+scale=scale(meandata2007$mean_tfidf,center = T,scale = TRUE)
+s2007=data.frame(meandata2007,scale)
+scale=scale(meandata2006$mean_tfidf,center = T,scale = TRUE)
+s2006=data.frame(meandata2006,scale)
+scale=scale(meandata2005$mean_tfidf,center = T,scale = TRUE)
+s2005=data.frame(meandata2005,scale)
+scale=scale(meandata2004$mean_tfidf,center = T,scale = TRUE)
+s2004=data.frame(meandata2004,scale)
+#######################원래 데이터와 묶어주기
+
+
+
+
+########################데이터저장
+write.csv(s2021,"C:/a/a/ip/s2021.csv")
+write.csv(s2020,"C:/a/a/ip/s2020.csv")
+write.csv(s2019,"C:/a/a/ip/s2019.csv")
+write.csv(s2018,"C:/a/a/ip/s2018.csv")
+write.csv(s2017,"C:/a/a/ip/s2017.csv")
+write.csv(s2016,"C:/a/a/ip/s2016.csv")
+write.csv(s2015,"C:/a/a/ip/s2015.csv")
+write.csv(s2014,"C:/a/a/ip/s2014.csv")
+write.csv(s2013,"C:/a/a/ip/s2013.csv")
+write.csv(s2012,"C:/a/a/ip/s2012.csv")
+write.csv(s2011,"C:/a/a/ip/s2011.csv")
+write.csv(s2010,"C:/a/a/ip/s2010.csv")
+write.csv(s2009,"C:/a/a/ip/s2009.csv")
+write.csv(s2008,"C:/a/a/ip/s2008.csv")
+write.csv(s2007,"C:/a/a/ip/s2007.csv")
+write.csv(s2006,"C:/a/a/ip/s2006.csv")
+write.csv(s2005,"C:/a/a/ip/s2005.csv")
+write.csv(s2004,"C:/a/a/ip/s2004.csv")
+#########################데이터 전체 합체
+sall=rbind(s2021,s2020,s2019,s2018,s2017,s2016,s2015,s2014,s2013,s2012,s2011,s2010,s2009,s2008,s2007,s2005,s2004)
+########################전체데이터 저장
+write.csv(sall,"C:/a/a/ip/sall.csv")
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#################
+test1=extractNoun(maintext.t.w.g.2021)
+test2=tibble(seq = 1:length(test1),text = test1)
+#여기있는 티블 데이터를 단어 하나하나에 문서번호를 먹여줘야함
+melt(test2,id.vars = 1:2)
+separate_rows(test2,)
+test3=unlist(test2)
+test3=test2 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n)
+test2=unlist(test1)
+######################원본 데이터
+df= data.frame()
+for(i in 1:length(test1)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(test2$text[i]))
+  df = rbind(df, df_sub)
+}
+head(df)
+tail(df)
+################TF IDF값 구하기
+tokens.count.2021=token.2021 %>% count(seq,word,sort = TRUE) # %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2020=token.2020 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2019=token.2019 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2018=token.2018 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2017=token.2017 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2016=token.2016 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2015=token.2015 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2014=token.2014 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2013=token.2013 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2012=token.2012 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2011=token.2011 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2010=token.2010 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2009=token.2009 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2008=token.2008 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2007=token.2007 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2006=token.2006 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2005=token.2005 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+tokens.count.2004=token.2004 %>% count(seq,word,sort = TRUE) %>%  filter(n > 3) %>% bind_tf_idf(seq,word,n) #각 관측치 N값 구하기
+##################연도별로 묶어주기
+year=2021
+tibb.new.TF.2021=data.frame(tokens.count.2021,year)
+######################2020
+year=2020
+tibb.new.TF.2020=data.frame(tokens.count.2020,year)
+######################2019
+year=2019
+tibb.new.TF.2019=data.frame(tokens.count.2019,year)
+######################2018
+year=2018
+tibb.new.TF.2018=data.frame(tokens.count.2018,year)
+######################2017
+year=2017
+tibb.new.TF.2017=data.frame(tokens.count.2017,year)
+######################2016
+year=2016
+tibb.new.TF.2016=data.frame(tokens.count.2016,year)
+######################2015
+year=2015
+tibb.new.TF.2015=data.frame(tokens.count.2015,year)
+######################2014
+year=2014
+tibb.new.TF.2014=data.frame(tokens.count.2014,year)
+############################################같은 행끼리 합치기 및 평균
+meandata2014=ddply(tibb.new.TF.2014,.(word,year),summarise,seq=length(word),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(word)))
+meandata2015=ddply(tibb.new.TF.2015,.(word,year),summarise,seq=length(word),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(word)))
+meandata2016=ddply(tibb.new.TF.2016,.(word,year),summarise,seq=length(word),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(word)))
+meandata2017=ddply(tibb.new.TF.2017,.(word,year),summarise,seq=length(word),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(word)))
+meandata2018=ddply(tibb.new.TF.2018,.(word,year),summarise,seq=length(word),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(word)))
+meandata2019=ddply(tibb.new.TF.2019,.(word,year),summarise,seq=length(word),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(word)))
+meandata2020=ddply(tibb.new.TF.2020,.(word,year),summarise,seq=length(word),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(word)))
+meandata2021=ddply(tibb.new.TF.2021,.(word,year),summarise,seq=length(word),tf=sum(tf),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(word)))
+
+########################표준화
+scale2021=scale(meandata2021$mean_tfidf,center = T,scale = TRUE)
+scale2020=scale(meandata2020$mean_tfidf,center = T,scale = TRUE)
+scale2019=scale(meandata2019$mean_tfidf,center = T,scale = TRUE)
+scale2018=scale(meandata2018$mean_tfidf,center = T,scale = TRUE)
+scale2017=scale(meandata2017$mean_tfidf,center = T,scale = TRUE)
+scale2016=scale(meandata2016$mean_tfidf,center = T,scale = TRUE)
+scale2015=scale(meandata2015$mean_tfidf,center = T,scale = TRUE)
+scale2014=scale(meandata2014$mean_tfidf,center = T,scale = TRUE)
+#######################원래 데이터와 묶어주기
+s2021=data.frame(meandata2021,scale2021)
+s2020=data.frame(meandata2020,scale2020)
+s2019=data.frame(meandata2019,scale2019)
+s2018=data.frame(meandata2018,scale2018)
+s2017=data.frame(meandata2017,scale2017)
+s2016=data.frame(meandata2016,scale2016)
+s2015=data.frame(meandata2015,scale2015)
+s2014=data.frame(meandata2014,scale2014)
+#####################전체합치기
+sall=rbind(s2021,s2020,s2019,s2018,s2017,s2016,s2015,s2014)
