@@ -44,9 +44,24 @@ token=s.maintext %>%
   )
 s.token=token %>% filter(nchar(token$word)>2)
 s.c.token=s.token %>% count(IPC,word,sort=TRUE)
+###############IPC분리
+df.IPC= data.frame()
+for(i in 1:length(s.c.token$IPC)){
+  # i = 1
+  df_sub1 = data.frame(n=s.c.token$n[i],
+                       IPC = unlist(s.c.token$IPC[i]))
+  df.IPC = rbind(df.IPC, df_sub1)
+}
+#############word분리
+df.word= data.frame()
+for(i in 1:length(s.c.token$IPC)){
+  # i = 1
+  df_sub2 = data.frame(word = unlist(s.c.token$word[i]))
+  df.word = rbind(df.word, df_sub2)
+}
 ################데이터 배열 만들기 800층 정도 생각하기 dim함수 넣어서
 arr2 <- array(
-  data = df.word$word,
+  data = df.word$word,dim = c(10,8,300),
   dimnames = list(df.IPC$IPC
   )
 )
@@ -65,6 +80,6 @@ diag(cosine_dist_mat) <- NA
 
 cosine_dist <- apply(cosine_dist_mat, 2, mean, na.rm=TRUE)
 
-cosine_dist
-
-write.csv(cosine_dist,"c:/a/dist.csv")
+k=data.frame(cosine_dist,df.IPC$IPC)
+write.table(l,"c:/a/dist2.txt")
+write.csv(k,"c:/a/dist.csv")
