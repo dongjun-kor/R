@@ -1,0 +1,144 @@
+install.packages("sna")
+library(sna)
+######
+ssr=read.csv("c:/a/ssr.csv",header = T,sep=",")
+names(ssr)
+
+ssr.t=paste(ssr[,3],ssr[,4])
+ssr.m=as.matrix(sss.t)
+ssr.cor=Corpus(VectorSource(ssr.t))
+ssr.cor
+
+ssr.dtm=DocumentTermMatrix(ssr.cor)
+inspect(ssr.dtm)
+dim(ssr.dtm)
+
+nssr.dtm=ssr.dtm[,101:2565]
+
+inspect(nssr.dtm[1,1:10])
+
+############
+library(cluster)
+sc=pam(nssr.dtm,5)
+si=silhouette(sc)
+plot(si)
+ssr.pca=prcomp(nssr.dtm,retx=T)
+ssr.score=predict(ssr.pca)
+ssr.score3=ssr.score[,1:3]
+
+############
+ssr.fc=fanny(ssr.score3,5)
+ssr.fc
+
+ssr.fc$membership
+
+am=read.table("c:/a/amatrix.txt",header = T,sep="")
+
+sam=am[,2:6]
+msam=as.matrix(sam)
+
+colnames(msam)
+rownames(msam)
+
+rownames(msam)=ssr$p_num
+
+rownames(msam)
+
+##############
+msam.w=msam[c(60,57,56,54,53,52,55,59,58,5),]
+msam.w
+
+n=nrow(msam.w)
+m=ncol(msam.w)
+B=rbind(cbind(matrix(0,n,n),msam.w),cbind(t(msam.w),matrix(0,m,m)))
+vertex.col=c(rep("red",n),rep(2,m))
+vertex.cex=c(rep(1,n),rep(2,m))
+gplot(B,mode="circle",displaylabels = T,boxed.labels = F,
+      vertex.col = vertex.col,vertex.cex = vertex.cex,
+      label.col = vertex.col,label.cex=1.0,usearrows=F)
+
+##############
+R.degree=degree(B,cmode = "indegree")[1:n]
+R.closeness1=closeness(B)[1:n]
+R.closeness2=closeness(B,cmode = "suminvundir")
+R.betweenness=betweenness(B)[1:n]
+R.degree
+
+round(R.closeness1,2)
+round(R.closeness2,2)
+round(R.betweenness,0)
+
+c.degree=degree(B,cmode = "indegree")[(n+1):(n+m)]
+C.closeness1=closeness(B)[(n+1):(n+m)]
+C.closeness2=closeness(B,cmode = "suminvundir")[(n+1):(n+m)]
+C.betweenness=betweenness(B)[(n+1):(n+m)]
+c.degree
+
+round(C.closeness1,2)
+round(C.closeness2,2)
+round(C.betweenness,0)
+#####US
+msam.us=msam[c(36,37,39,1,38,40,41,34,32,35,33,29,30,31,3,28,26,27,25,2,20,21,24,23,22,19,16,17,18,15,14,10,9,12,11,13,8),]
+n=nrow(msam.us)
+m=ncol(msam.us)
+B=rbind(cbind(matrix(0,n,n),msam.us),cbind(t(msam.us),matrix(0,m,m)))
+vertex.col=c(rep("red",n),rep("blue",m))
+vertex.cex=c(rep(1,n),rep(2,m))
+
+gplot(B,mode="circle",displaylabels = T,boxed.labels = F,
+      vertex.col = vertex.col,vertex.cex = vertex.cex,
+      label.col = vertex.col,label.cex=1.0,usearrows=F)
+
+
+R.degree=degree(B,cmode = "indegree")[1:n]
+R.closeness1=closeness(B)[1:n]
+R.closeness2=closeness(B,cmode = "suminvundir")[1:n]
+R.betweenness=betweenness(B)[1:n]
+R.degree
+
+round(R.closeness1,2)
+round(R.closeness2,2)
+round(R.betweenness,0)
+
+c.degree=degree(B,cmode = "indegree")[(n+1):(n+m)]
+C.closeness1=closeness(B)[(n+1):(n+m)]
+C.closeness2=closeness(B,cmode = "suminvundir")[(n+1):(n+m)]
+C.betweenness=betweenness(B)[(n+1):(n+m)]
+c.degree
+
+round(C.closeness1,2)
+round(C.closeness2,2)
+round(C.betweenness,0)
+############EP
+msam.ep=msam[c(47,42,136,137,138,131,132,43,51,50,49,141,4,48,44,46,45),]
+n=nrow(msam.ep)
+m=ncol(msam.ep)
+B=rbind(cbind(matrix(0,n,n),msam.ep),cbind(t(msam.ep),matrix(0,m,m)))
+vertex.col=c(rep("red",n),rep("blue",m))
+vertex.cex=c(rep(1,n),rep(2,m))
+
+gplot(B,mode="circle",displaylabels = T,boxed.labels = F,
+      vertex.col = vertex.col,vertex.cex = vertex.cex,
+      label.col = vertex.col,label.cex=1.0,usearrows=F)
+
+R.degree=degree(B,cmode = "indegree")[1:n]
+R.closeness1=closeness(B)[1:n]
+R.closeness2=closeness(B,cmode = "suminvundir")[1:n]
+R.betweenness=betweenness(B)[1:n]
+R.degree
+
+round(R.closeness1,2)
+round(R.closeness2,2)
+round(R.betweenness,0)
+
+c.degree=degree(B,cmode = "indegree")[(n+1):(n+m)]
+C.closeness1=closeness(B)[(n+1):(n+m)]
+C.closeness2=closeness(B,cmode = "suminvundir")[(n+1):(n+m)]
+C.betweenness=betweenness(B)[(n+1):(n+m)]
+c.degree
+
+round(C.closeness1,2)
+round(C.closeness2,2)
+round(C.betweenness,0)
+a="hobby"
+
