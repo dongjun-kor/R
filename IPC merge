@@ -1,0 +1,49 @@
+library(plyr)
+library(TTR)
+library(forecast)
+library(tseries)
+library(KoNLP)
+library(tidytext)
+library(dplyr)
+library(tidyverse)
+library(reshape)
+library(reshape2)
+library(lubridate)
+library(nycflights13)
+library(keras)
+library(tensorflow)
+library(ggplot2)
+library(timetk)
+library(proxy)
+library(tm)
+#####################
+text=read.csv("C:/a/ipcim.csv")
+eng=text$eng
+IPC=text[,c(12:60)]
+maintext=data.frame(IPC,eng)
+maintext.t=tibble(text)
+##################연도별 분리
+#################워드 분리
+maintext.e=maintext$eng
+#################특수문자 제거
+maintext.e.p=gsub("[[:punct:]]", " ", maintext.e)
+################숫자제거(이 코드는 일시적으로 사용하지 말것)
+maintext.e.p.d=gsub("\\d+", " ", maintext.e.p)
+################각각 문서 분리
+eng <- tibble(seq = 1:length(maintext.e.p.d),text = maintext.e.p.d)
+s.maintext=tibble(data.frame(eng,IPC))
+#################각 열데이터 병합
+b=melt(maintext.t,id=c('code','title','contry','dev','star','fam','fam.du','smmary','eng','day','year'))
+c=b %>% filter(nchar(b$value)>3)
+d=c[,-12]
+#################손실 데이터 적재
+data=maintext.t[,c(1:11)]
+value=maintext.t$Main
+data2=data.frame(data,value)
+data3=rbind(data2,d)
+###############Ipc데이터와 merge
+bert=read.csv("c:/a/IPCBERT.csv")
+
+test=merge(data3,bert,by="value",all=TRUE)
+maindata=na.omit(test)
+write.csv(maindata,"c:/a/BERTME2.csv")
