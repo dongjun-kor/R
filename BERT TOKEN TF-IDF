@@ -1,0 +1,63 @@
+library(plyr)
+library(TTR)
+library(forecast)
+library(tseries)
+library(KoNLP)
+library(tidytext)
+library(dplyr)
+library(tidyverse)
+library(reshape)
+library(reshape2)
+library(lubridate)
+library(nycflights13)
+library(keras)
+library(tensorflow)
+library(ggplot2)
+library(timetk)
+library(proxy)
+library(tm)
+useNIADic()
+#########################################데이터 불러오기
+A1=read.csv("C:/a/c/A_1.csv")
+A2=read.csv("C:/a/c/A_2.csv")
+A3=read.csv("C:/a/c/A_3.csv")
+B1=read.csv("C:/a/c/B_1.csv")
+F1=read.csv("C:/a/c/F_1.csv")
+G1=read.csv("C:/a/c/G_1.csv")
+G2=read.csv("C:/a/c/G_2.csv")
+H1=read.csv("C:/a/c/H_1.csv")
+H2=read.csv("C:/a/c/H_2.csv")
+#######################################
+year=as.character(H2$Year)
+word=H2$tisummary
+maintext=data.frame(year,word)
+maintext.t=tibble(maintext)
+#######################################전체 데이터 문서 라벨링
+dataH2 <- tibble(seq = 1:length(H2$title),H2) #연속적 데이터 변경
+#######################################워드분리
+maintext.t.w=maintext.t$word
+#######################################특수문자 제거
+maintext.t.w.g.a=gsub("[[:punct:]]", " ", maintext.t.w)
+#######################################숫자제거
+maintext.t.w.g=gsub("\\d+", " ", maintext.t.w.g.a)
+#######################################형태소 분석
+maintext.e=extractNoun(maintext.t.w.g)
+#######################################문서 라벨링
+maintext.t.w.g.t <- tibble(seq = 1:length(maintext.e),text = maintext.e)
+#######################################단어 분리하기
+df= data.frame()
+for(i in 1:length(maintext.t.w.g.t$seq)){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(maintext.t.w.g.t$text[i]))
+  df = rbind(df, df_sub)
+}
+#######################################TFIDF구하기
+tokens.count=df %>% count(seq,token,sort = TRUE) %>%  filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기
+#######################################데이터 합치기 key=seq
+mengedata=merge(tokens.count,dataH2,value=seq,all=TRUE)
+#######################################표준화
+scaledata=scale(mengedata$tf_idf,center=TRUE)
+#######################################열로 묶어주기
+ssdata=cbind(mengedata,scaledata)
+write.csv(ssdata,"c:/a/d/h2.csv")
