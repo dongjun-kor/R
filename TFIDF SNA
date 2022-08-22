@@ -1,0 +1,96 @@
+library(reshape2)
+library(igraph)
+library(arules)
+library(Sejong)
+library(readxl)
+library(dplyr)
+library(TTR)
+library(KoNLP)
+library(tidytext)
+library(dplyr)
+library(tidyverse)
+library(tm)
+library(openxlsx)
+library(wordcloud2)
+library(hash)
+library(tau)
+library(RSQLite)
+library(rJava)
+a=c(1,2,3)
+b=c(4,5,6)
+c=c(7,8,9)
+d=data.frame(a,b,c)
+list(a,b,c)
+#marketing <- file("c:/a/data.txt", encoding="UTF-8")
+#marketing2 <- readLines(marketing) # 줄 단위 데이터 생성
+# incomplete final line found on - Error 발생 시 UTF-8 인코딩 방식으로 재 저장
+close(marketing)
+
+marketing2=read.xlsx("c:/a/out/outdataall.xlsx")
+marketing3=Corpus(VectorSource(marketing2$word))
+marketing4=TermDocumentMatrix(marketing3,control=list(tokenize=extractNoun))
+marketing5=as.matrix(marketing4)
+marketing6=t(data.frame(marketing6))
+marketing7=data.frame(marketing7)
+write.xlsx(marketing8,"c:/a/out/sna/mat3.xlsx")
+a=tibble(marketing8)
+b=Corpus(VectorSource(a$marketing8))
+tdm=TermDocumentMatrix(b)
+Encoding(tdm$dimnames$Terms) = 'UTF-8'
+d=as.matrix(tdm)
+
+
+e=sapply(marketing2, extractNoun, USE.NAMES=F)
+f=sapply(e, paste, collapse = " ")
+g=Corpus(VectorSource(f))
+h=TermDocumentMatrix(g)
+i=as.matrix(h)
+j=t(data.frame(i))
+k=data.frame(j)
+write.xlsx(k,"c:/a/out/sna/mat6.xlsx")
+l=read.xlsx("c:/a/out/sna/mat6.xlsx")
+
+#################TF-DIF
+w1=tibble(seq = 1:length(marketing2$word),text = marketing2$word) 
+word1=gsub("[[:punct:]]", " ",w1)
+word2=gsub("\\d+", " ",word1)
+word3=tibble(seq = 1:length(word2),text = word2) 
+word4=extractNoun(w1$text)
+word5=tibble(seq = 1:length(word4),text = word4)
+df= data.frame()
+for(i in 1:58){
+  # i = 1
+  df_sub = data.frame(seq = i,
+                      token = unlist(word5$text[i]))
+  df = rbind(df, df_sub)
+}
+tokens.count= df %>% count(seq,token, sort=TRUE) %>% filter(nchar(token) > 1) %>% bind_tf_idf(seq,token,n) #각 관측치 N값 구하기 
+
+meandata=ddply(tokens.count,.(token),summarise,tf=sum(tf),n=length(token),
+                   idf=sum(idf),tf_idf=sum(tf_idf),mean_tfidf=(sum(tf_idf)/length(token)))
+
+write.xlsx(meandata,"c:/a/out/sna/tfidf3.xlsx")
+
+##############sna
+
+data= read.xlsx("C:/a/out/sna/mat5.xlsx")
+
+dolbyus.cor=cor(data)
+
+library(sna)
+
+snaplot<- function(y){
+  for(i in 1:20){
+    for(j in 1:20){
+      if (abs(dolbyus.cor[i,j])>y) dolbyus.cor[i,j]=1 else dolbyus.cor[i,j]=0}}
+  print(dolbyus.cor)
+  gplot(dolbyus.cor,displaylabels = T, boxed.labels = F)
+}
+
+fix(snaplot) 
+
+snaplot(0.02)
+
+dolbyus.cor
+
+write.xlsx(as.data.frame(t(dolbyus.cor)),"c:/a/out/sna/correlation.xlsx")
