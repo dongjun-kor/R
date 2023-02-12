@@ -1,0 +1,126 @@
+library("xlsx")
+library("shiny")
+library("RCurl")
+library("rjson")
+library("readxl")
+library("openxlsx")
+library("shinythemes")
+
+ui <- fluidPage(
+  theme = shinytheme("cerulean"),
+  titlePanel("AI 기반 특허 노이즈 제거 솔루션"),
+  sidebarLayout(
+    sidebarPanel(
+      textInput("api_key", "API Key", value = ""),
+      fileInput("file", "Select XLSX File", accept = c(".xlsx")),
+      br(),
+      actionButton("submit", "Submit", class = "btn-primary"),
+      downloadButton("download_excel", "Download Result as Excel", class = "btn-success"),
+      hr(),
+      tags$p("Instructions:"),
+      tags$ul(
+        tags$li("Enter your API Key."),
+        tags$li("Select an XLSX file to upload."),
+        tags$li("Click the Submit button to process the data."),
+        tags$li("The result will appear below and can be downloaded as an Excel file.")
+      )
+    ),
+    mainPanel(
+      br(),
+      tags$h4("Result:"),
+      tags$pre(id = "result", style = "font-size: 16px; font-family: monospace; overflow-x: scroll;")
+    )
+  ),
+  tags$head(
+    tags$style(
+      "
+      .btn-primary, .btn-success {
+        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      "
+    )
+  )
+)
+
+
+
+server <- function(input, output) {
+  data <- reactive({
+    if (is.null(input$file)) return(NULL)
+    read_xlsx(input$file$datapath)
+  })
+  
+  submit_request <- function() {
+    xlsx_file <- data()
+    
+    options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"), 
+                                ssl.verifypeer = FALSE))
+    
+    results <- data.frame()
+    
+    for (i in 1:nrow(xlsx_file)) {
+      data_list <- list(document = xlsx_file[i,1])
+      inputs_list <- list(data = data_list)
+      req_list <- list(Inputs = inputs_list, GlobalParameters = 1.0)
+      
+      req_json <- toJSON(req_list)
+      req <- fromJSON(req_json)
+      
+      requestBody = enc2utf8(toJSON(req))
+      api_key = input$api_key
+      if (api_key == "8WcJY3fNuBheNJoYcuITxAGfUg4qbkRd" || !is.character(api_key))
+      {
+        stop("A key should be provided to invoke the endpoint")
+      }
+      authz_hdr = paste('Bearer', api_key, sep=' ')
+      
+      h = basicTextGatherer()
+      hdr = basicHeaderGatherer()
+      
+      curlPerform(
+        url = "http://85703749-f0d5-489f-8a7f-724648002ab4.koreacentral.azurecontainer.io/score",
+        httpheader=c('Content-Type' = "application/json", 'Authorization' = authz_hdr),
+        postfields=requestBody,
+        writefunction = h$update,
+        headerfunction = hdr$update,
+        verbose = TRUE
+      )
+      
+      headers = hdr$value()
+      httpStatus = headers["status"]
+      if (httpStatus >= 400)
+      {
+        print(paste("The request failed with status code:", httpStatus, sep=" "))
+        print(headers)
+      }
+      
+      result = h$value()
+      results <- rbind(results, data.frame(Result = result))
+    }
+    
+    results
+  }
+  
+  output$result <- renderText({
+    if (input$submit == 0) return(NULL)
+    results <- submit_request()
+    paste("Results:", paste(results$Result, collapse = ", "))
+  })
+  
+  
+  output$download_excel <- downloadHandler(
+    filename = function() {
+      paste("result", Sys.Date(), ".xlsx", sep = "_")
+    },
+    content = function(file) {
+      xlsx_file <- data()
+      xlsx_file$Result <- submit_request()$Result
+      write.xlsx(xlsx_file, file, row.names = FALSE)
+    }
+  )
+}
+
+# Run the app
+shinyApp(ui, server)
